@@ -4,26 +4,32 @@
 var submitSite = document.getElementById('submit');
 var site = {name:'', url:''};
 var siteList = [];
-var fullUrl;
 
 submitSite.addEventListener('click', addSite);
 
-function addSite(){
+(function(){
+    siteList = JSON.parse(localStorage.getItem('site'));
+    display()
+})()
 
+function addSite(){
     site = {
         name: document.getElementById('siteName').value.trim(),
         url: document.getElementById('siteURL').value.trim()
     };
-    if(site.name != '' && site.url != ''){
-        // if(isValidUrl(site.url)){
+    if(site.name.split('').length >= 3 && site.url != ''){
+         if(isValidUrl(site.url)){
             siteList.push(site);
             localStorage.setItem('site', JSON.stringify(siteList))
             display()
-        // }else{
-            // window.alert('Please enter a valid URL');
-        // }
+            clearData()
+         }else{
+             window.alert('Please enter a valid URL');
+         }
     }else{
-        window.alert('Please fill all fields');
+        window.alert(`Site Name or Url is not valid, Please follow the rules below :
+        Site name must contain at least 3 characters
+        Site URL must be a valid one`);
     }
 }
 
@@ -38,19 +44,14 @@ function display(){
         HTMLcode += `
         <tr>
             <td>${i+1}</td>
-            <td>${siteList[i].name}</td>
-            <td><button onClick="visitSite(${i})"><i class="fa-regular fa-eye"></i> Visit</button></td>
-            <td><button onClick="deleteSite(${i})"><i class="fa-solid fa-trash-can"></i> Delete</button></td>
+            <td>${siteList[i].name.charAt(0).toUpperCase() + siteList[i].name.slice(1)}</td>
+            <td><button class="btn btn-visit pe-2" onClick="visitSite(${i})"><i class="fa-solid fa-eye pe-2"></i>Visit</button></td>
+            <td><button class="btn btn-delete pe-2" onClick="deleteSite(${i})"><i class="fa-solid fa-trash-can pe-2"></i>Delete</button></td>
         </tr>`;
     }
 
     document.getElementById('tableBody').innerHTML = HTMLcode;
 }
-
-(function(){
-    siteList = JSON.parse(localStorage.getItem('site'));
-    display()
-})()
 
 function visitSite(index){
     window.open('https://' + siteList[index].url,"_blank");
@@ -62,15 +63,76 @@ function deleteSite(index){
     display();
 }
 
-// method 1: Validating URL with Regex
+function clearData(){
+    document.getElementById('siteName').value = null;
+    document.getElementById('siteURL').value = null;
+}
+
+
+// URL Validation Methods
+// method 1: Own function
 // method 2: URL object
-// method 3: npm Packages
+// method 3: Validating URL with Regex
 
-var validateUrl = document.getElementById('validate');
-validateUrl.addEventListener('click', isValidUrl);
+// method 1
+function isValidUrl(siteUrl) {
+    const validPrefixes = ['http://www.', 'https://www.', 'www.'];
+    const tldPattern = /\.(com|net|org|edu|gov|mil|int|info|biz|co)$/;
 
-// method 1 - without http
-// function isValidUrl() {
+    // Check if the URL starts with any of the valid prefixes
+    const hasValidPrefix = validPrefixes.some(prefix => siteUrl.startsWith(prefix));
+    
+    if (!hasValidPrefix) {
+        return false;
+    }
+
+    // Extract the part of the URL after the valid prefix
+    const prefix = validPrefixes.find(prefix => siteUrl.startsWith(prefix));
+    const urlWithoutPrefix = siteUrl.slice(prefix.length);
+
+    // Check if the URL ends with a valid top-level domain
+    const match = urlWithoutPrefix.match(tldPattern);
+    if (!match) {
+        return false;
+    }
+
+    // Extract the part before the TLD
+    const domainAndPath = urlWithoutPrefix.slice(0, -match[0].length);
+
+    // Check if there's at least one characters between the prefix and the TLD
+    if (domainAndPath.length < 1) {
+        return false;
+    }
+
+    return true;
+}
+
+
+// method 2 - without http
+// function isValidUrl(siteUrl) {
+//     try {
+//       new URL(siteUrl);
+//       return true;
+//     } catch (err) {
+//         return false;
+//     }
+// }
+
+
+// method 2 - with http
+// function isValidUrl(siteUrl) {
+//     try {
+//         var newUrl = new URL(siteUrl);
+//         const allowedProtocols = ['http:', 'https:']; // Add or remove protocols as needed
+//       return allowedProtocols.includes(newUrl.protocol);
+//     } catch (err) {
+//       return false;
+//     }
+//   }
+
+
+// method 3 - without http
+// function isValidUrl(siteUrl) {
 //     const pattern = new RegExp(
 //       "^([a-zA-Z]+:\\/\\/)?" + // protocol
 //         "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
@@ -80,11 +142,12 @@ validateUrl.addEventListener('click', isValidUrl);
 //         "(\\#[-a-z\\d_]*)?$", // fragment locator
 //       "i"
 //     );
-//     return pattern.test(document.getElementById('siteURL').value.trim());
+//     return pattern.test(siteUrl);
 //   }
 
-// method 1 - with http
-// function isValidHttpUrl() {
+
+// method 3 - with http
+// function isValidHttpUrl(siteUrl) {
 //     const pattern = new RegExp(
 //       "^(https?:\\/\\/)?" + // protocol
 //         "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
@@ -94,45 +157,5 @@ validateUrl.addEventListener('click', isValidUrl);
 //         "(\\#[-a-z\\d_]*)?$", // fragment locator
 //       "i"
 //     );
-//     return pattern.test(document.getElementById('siteURL').value.trim());
+//     return pattern.test(siteUrl);
 //   }
-
-// method 2 - without http
-// function isValidUrl() {
-//     try {
-//       new URL(document.getElementById('siteURL').value.trim());
-//     } catch (err) {
-//         return false;
-//     }
-//     return true;
-// }
-
-// method 2 - with http
-// function isValidUrl() {
-//     try {
-//         var newUrl = new URL(document.getElementById('siteURL').value.trim());
-//       return ["http:", "https:"].includes(newUrl.protocol);
-//     } catch (err) {
-//       return false;
-//     }
-//   }
-
-// method 3 - without http
-// 
-// import isUrl from "is-url";
-// function isValidUrl() {
-//     if(isUrl(document.getElementById('siteURL').value.trim())){
-//         return true;
-//     }
-//     return false;
-// }
-
-// method 3 - with http
-// npm install is-url-http
-// import isUrlHttp from "is-url-http";
-// function isValidUrl() {
-//     if(isUrlHttp(document.getElementById('siteURL').value.trim())){
-//         return true;
-//     }
-//     return false;
-// }
