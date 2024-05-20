@@ -5,7 +5,8 @@
     scroll-behavior: smooth;
     padding: 0;
     margin: 0;
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
 }
 
 body{
@@ -31,6 +32,8 @@ h1::before{
     left: 0;
     bottom: 10px;
     background-color: #fec260;
+    -webkit-transition: height 350ms;
+    -o-transition: height 350ms;
     transition: height 350ms;
     z-index: -1;
 }
@@ -43,6 +46,8 @@ h1:hover::before{
     left: 0;
     bottom: 10px;
     background-color: #fec260;
+    -webkit-transition: height 350ms;
+    -o-transition: height 350ms;
     transition: height 350ms;
     z-index: -1;
 }
@@ -56,7 +61,10 @@ h2{
     font-family: "Righteous", cursive;
     font-size: 25px;
     color: transparent;
-    background-clip: text;
+    -webkit-background-clip: text;
+            background-clip: text;
+    background-image: -webkit-gradient(linear, left top, right top, from(#3ca55c), to(#b5ac49));
+    background-image: -o-linear-gradient(left, #3ca55c, #b5ac49);
     background-image: linear-gradient(to right, #3ca55c, #b5ac49);
     font-weight: 500;
 }
