@@ -74,6 +74,8 @@ function clearData(){
 // method 2: URL object
 // method 3: Validating URL with Regex
 
+var urlCheck = document.getElementById('siteURL');
+
 // method 1
 function isValidUrl(siteUrl) {
     const validPrefixes = ['http://www.', 'https://www.', 'www.'];
@@ -83,6 +85,8 @@ function isValidUrl(siteUrl) {
     const hasValidPrefix = validPrefixes.some(prefix => siteUrl.startsWith(prefix));
     
     if (!hasValidPrefix) {
+        urlCheck.classList.add('is-invalid');
+        urlCheck.classList.remove('is-valid');
         return false;
     }
 
@@ -93,6 +97,8 @@ function isValidUrl(siteUrl) {
     // Check if the URL ends with a valid top-level domain
     const match = urlWithoutPrefix.match(tldPattern);
     if (!match) {
+        urlCheck.classList.add('is-invalid');
+        urlCheck.classList.remove('is-valid');
         return false;
     }
 
@@ -101,19 +107,37 @@ function isValidUrl(siteUrl) {
 
     // Check if there's at least one characters between the prefix and the TLD
     if (domainAndPath.length < 1) {
+        urlCheck.classList.add('is-invalid');
+        urlCheck.classList.remove('is-valid');
         return false;
     }
 
+    urlCheck.classList.add('is-valid');
+    urlCheck.classList.remove('is-invalid');
     return true;
 }
 
+function isValidName(){
+    var numOfChar = document.getElementById('siteName');
+    if(numOfChar.value.length < 3){
+        numOfChar.classList.add('is-invalid');
+        numOfChar.classList.remove('is-valid');
+    }else{
+        numOfChar.classList.add('is-valid');
+        numOfChar.classList.remove('is-invalid');
+    }
+}
 
 // method 2 - without http
 // function isValidUrl(siteUrl) {
 //     try {
 //       new URL(siteUrl);
+//       urlCheck.classList.add('is-valid');
+//       urlCheck.classList.remove('is-invalid');
 //       return true;
 //     } catch (err) {
+//         urlCheck.classList.add('is-invalid');
+//         urlCheck.classList.remove('is-valid');
 //         return false;
 //     }
 // }
@@ -124,8 +148,12 @@ function isValidUrl(siteUrl) {
 //     try {
 //         var newUrl = new URL(siteUrl);
 //         const allowedProtocols = ['http:', 'https:']; // Add or remove protocols as needed
+//         urlCheck.classList.add('is-valid');
+//         urlCheck.classList.remove('is-invalid');
 //       return allowedProtocols.includes(newUrl.protocol);
 //     } catch (err) {
+//       urlCheck.classList.add('is-invalid');
+//       urlCheck.classList.remove('is-valid');    
 //       return false;
 //     }
 //   }
@@ -142,6 +170,13 @@ function isValidUrl(siteUrl) {
 //         "(\\#[-a-z\\d_]*)?$", // fragment locator
 //       "i"
 //     );
+//     if(pattern.test(siteUrl)){
+//          urlCheck.classList.add('is-valid');
+//          urlCheck.classList.remove('is-invalid');
+//     }else{
+//          urlCheck.classList.add('is-invalid');
+//          urlCheck.classList.remove('is-valid');
+//      }
 //     return pattern.test(siteUrl);
 //   }
 
@@ -157,5 +192,12 @@ function isValidUrl(siteUrl) {
 //         "(\\#[-a-z\\d_]*)?$", // fragment locator
 //       "i"
 //     );
+//     if(pattern.test(siteUrl)){
+//          urlCheck.classList.add('is-valid');
+//          urlCheck.classList.remove('is-invalid');
+//     }else{
+//          urlCheck.classList.add('is-invalid');
+//          urlCheck.classList.remove('is-valid');
+//      }
 //     return pattern.test(siteUrl);
 //   }

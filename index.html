@@ -6,7 +6,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bookmarker</title>
+    <title>Bookmark</title>
 
     <!-- Font -->
     <link href="https://fonts.googleapis.com/css2?family=PT+Sans+Caption:wght@400;700&family=Pacifico&family=Righteous&display=swap" rel="stylesheet">
@@ -35,12 +35,12 @@
 
         <div class="siteName w-100 d-flex flex-column justify-content-center">
           <label for="siteName" class="pb-2 fw-semibold"><i class="fa-solid fa-book-bookmark pe-2"></i> Site Name</label>
-          <input type="text" id="siteName" class="form-control" required placeholder="Bookmark Name"/>
+          <input type="text" id="siteName" class="form-control" oninput="isValidName()" placeholder="Bookmark Name"/>
         </div>
 
         <div class="siteURL w-100 d-flex flex-column justify-content-center">
           <label for="siteURL" class="pb-2 fw-semibold"><i class="fa-solid fa-link pe-2"></i>Site URL</label>
-          <input type="url" id="siteURL" class="form-control" required placeholder="Website URL"/>
+          <input type="url" id="siteURL" class="form-control" oninput="isValidUrl(value)" placeholder="Website URL"/>
         </div>
 
         <button id="submit" class="btn btn-submit px-5">Submit</button>
